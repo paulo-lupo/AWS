@@ -1,0 +1,78 @@
+<!DOCTYPE htlm>
+<html>
+    <head>
+        <tittle>
+            (DynamoDB + Lambda + API Gateway) Test
+        </tittle>
+    </head>
+
+    <body>
+        <h1>Current Table Entries:</h1>
+        <div id="entries">
+            <form id="gform" method="POST" data-email="jpaulo.lupo@gmail.com" action="https://script.google.com/macros/s/AKfycbxYhko5AB0pGx5_zkZeNVb2TkmYRUsl97fKyozA13UbVCQrNNo/exec">
+                <lable for='fstnm'>First Name: </lable>
+                <input id='FirstName'></input><br>
+    
+                <lable for='sndnm'>Last Name: </lable>
+                <input id='LastName'></input><br>
+    
+                <lable for='pos'>Position: </lable>
+                <input name = position></input><br>
+    
+                <button id='submitButton'>&nbsp;Submit</button>
+            </form>
+        </div>
+
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script type='text/javascript'>
+
+            var API_URL = 'https://z34ycipdq8.execute-api.us-east-1.amazonaws.com/prod/entries';
+            var TO_MAIL = "jpaulo.ufal@gmail.com";
+
+            $(document).ready(function(){
+                $.ajax({
+                    type: 'GET',
+                    url: API_URL,
+
+                    success: function(data) {
+                        $('#entries').html('');
+                        
+                        data.Items.forEach(function(guestBookItem){
+                            $('#entries').append('<p>' +guestBookItem.FirstName + " " + guestBookItem.LastName + " works as a "
+                            + guestBookItem.Position +'</p>');
+                        
+                        });
+                    }
+                });
+            });
+
+            $('#submitButton').on('click', function() {
+                console.log("success");
+                console.log(JSON.stringify({'FirstName': $('#FirstName').val(),
+                                          'LastName': $('#LastName').val(),
+                                          'Position': $('#Position').val()}));
+                $.ajax({
+                    type: 'POST',
+                    url: API_URL,
+                    data: JSON.stringify({'FirstName': $('#FirstName').val(),
+                                          'LastName': $('#LastName').val(),
+                                          'Position': $('#Position').val()}),
+                    contentType: 'application/json',
+                    
+
+                    success: function(data) {
+
+                        console.log("success");
+                        
+                    }   
+                });
+
+                return false;
+            });
+            <h1>Enter a New Entry:</h1>
+
+        </script>
+    </body>
+</html>
